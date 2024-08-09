@@ -1,0 +1,11 @@
+<!ELEMENT tours (tour+)>
+<!ATTLIST tours xmlns CDATA #FIXED "http://www.tourandtravel.com/tours">
+<!ELEMENT tour (tourID, name, duration, price, startDate, endDate, destination, description)>
+<!ELEMENT tourID (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT duration (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+<!ELEMENT startDate (#PCDATA)>
+<!ELEMENT endDate (#PCDATA)>
+<!ELEMENT destination (#PCDATA)>
+<!ELEMENT description (#PCDATA)>

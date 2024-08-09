@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tours SYSTEM "tours.dtd">
+<tours xmlns="http://www.tourandtravel.com/tours">
+    <tour>
+        <tourID>T001</tourID>
+        <name>Magestic Manali</name>
+        <duration>14</duration>
+        <price>30000.00</price>
+        <startDate>2024-09-01</startDate>
+        <endDate>2024-09-15</endDate>
+        <destination>Manali</destination>
+        <description>Explore the beauty of Manali with our exclusive 14-day tour package.</description>
+    </tour>
+    <tour>
+        <tourID>T002</tourID>
+        <name>Gorgeous Goa</name>
+        <duration>10</duration>
+        <price>95000.00</price>
+        <startDate>2024-10-01</startDate>
+        <endDate>2024-10-10</endDate>
+        <destination>Goa</destination>
+        <description>Experience the vibrant cultures of Goa on a 10-day adventure.</description>
+    </tour>
+    <tour>
+        <tourID>T003</tourID>
+        <name>Scenetic Shimla</name>
+        <duration>7</duration>
+        <price>15000.00</price>
+        <startDate>2024-10-01</startDate>
+        <endDate>2024-10-7</endDate>
+        <destination>Shimla</destination>
+        <description>Experience the Lakkar bazar and mall road of Shimla on a 7-day trip.</description>
+    </tour>
+    <tour>
+        <tourID>T004</tourID>
+        <name>Jumbo Jaipur</name>
+        <duration>7</duration>
+        <price>25000.00</price>
+        <startDate>2024-12-01</startDate>
+        <endDate>2024-12-7</endDate>
+        <destination>Jaipur</destination>
+        <description>Experience the Forts of Jaipur and the culture of Rajasthan on a 7-day trip.</description>
+    </tour>
+</tours>

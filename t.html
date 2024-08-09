@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tour Packages</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        function loadXMLDoc(filename) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", filename, false);
+            xhttp.send();
+            return xhttp.responseXML;
+        }
+
+        function displayTable() {
+            var xmlDoc = loadXMLDoc("tours.xml");
+            var table = "<tr><th>Tour ID</th><th>Name</th><th>Duration (days)</th><th>Price (₹)</th><th>Start Date</th><th>End Date</th><th>Destination</th><th>Description</th></tr>";
+            var tours = xmlDoc.getElementsByTagName("tour");
+            for (var i = 0; i < tours.length; i++) {
+                table += "<tr><td>" +
+                tours[i].getElementsByTagName("tourID")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("name")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("duration")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("price")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("startDate")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("endDate")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("destination")[0].childNodes[0].nodeValue + "</td><td>" +
+                tours[i].getElementsByTagName("description")[0].childNodes[0].nodeValue + "</td></tr>";
+            }
+            document.getElementById("tourTable").innerHTML = table;
+        }
+
+        function initMap() {
+            var map = L.map('map').setView([20, 0], 2); // Center map on world view
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            var xmlDoc = loadXMLDoc("tours.xml");
+            var tours = xmlDoc.getElementsByTagName("tour");
+            var waypoints = [];
+
+            // Get the user's current location
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var startLat = position.coords.latitude;
+                var startLng = position.coords.longitude;
+                var start = L.latLng(startLat, startLng);
+
+                // Add marker for user's location
+                L.marker(start).addTo(map)
+                    .bindPopup('Your Location')
+                    .openPopup();
+
+                waypoints.push(start);
+
+                var destinationsProcessed = 0;
+
+                for (var i = 0; i < tours.length; i++) {
+                    var destination = tours[i].getElementsByTagName("destination")[0].childNodes[0].nodeValue;
+                    geocodeDestination(destination, function(lat, lon) {
+                        var end = L.latLng(lat, lon);
+                        waypoints.push(end);
+
+                        // Add marker for the destination
+                        L.marker(end).addTo(map)
+                            .bindPopup(destination)
+                            .openPopup();
+
+                        destinationsProcessed++;
+                        
+                        // Once all destinations are processed, add the route
+                        if (destinationsProcessed === tours.length) {
+                            L.Routing.control({
+                                waypoints: waypoints,
+                                routeWhileDragging: true,
+                                createMarker: function() { return null; } // Disable default markers
+                            }).addTo(map);
+
+                            map.fitBounds(L.latLngBounds(waypoints));
+                        }
+                    });
+                }
+            }, function(error) {
+                console.error('Error getting location:', error);
+            });
+        }
+
+        function geocodeDestination(destination, callback) {
+            var url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destination)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        var lat = data[0].lat;
+                        var lon = data[0].lon;
+                        callback(lat, lon);
+                    } else {
+                        console.log('No results found for: ' + destination);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body onload="displayTable(); initMap();">
+    <h1>Tour Packages</h1>
+    <table id="tourTable"></table>
+    <div id="map"></div>
+</body>
+</html>

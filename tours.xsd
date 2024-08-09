@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="http://www.tourandtravel.com/tours"
+           xmlns="http://www.tourandtravel.com/tours"
+           elementFormDefault="qualified">
+
+    <xs:element name="tours">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tour" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="tourID" type="xs:string"/>
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="duration">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="1"/>
+                                        <xs:maxInclusive value="30"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="price">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:decimal">
+                                        <xs:minInclusive value="500.00"/>
+                                        <xs:maxInclusive value="10000.00"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="startDate" type="xs:date"/>
+                            <xs:element name="endDate" type="xs:date"/>
+                            <xs:element name="destination" type="xs:string"/>
+                            <xs:element name="description" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
